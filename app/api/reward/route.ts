@@ -101,7 +101,19 @@ export async function POST(request: Request) {
     // Convertir amount a wei (18 decimales)
     const amountWei = ethers.utils.parseEther(amount.toString());
 
-    const tx = await fgToken.mint(playerAddress, amountWei);
+    // Polygon requiere un gas tip mínimo de 25 gwei
+    const feeData = await provider.getFeeData();
+    const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas && feeData.maxPriorityFeePerGas.gte(ethers.utils.parseUnits("30", "gwei"))
+      ? feeData.maxPriorityFeePerGas
+      : ethers.utils.parseUnits("30", "gwei");
+    const maxFeePerGas = feeData.maxFeePerGas && feeData.maxFeePerGas.gte(maxPriorityFeePerGas)
+      ? feeData.maxFeePerGas
+      : maxPriorityFeePerGas.mul(2);
+
+    const tx = await fgToken.mint(playerAddress, amountWei, {
+      maxPriorityFeePerGas,
+      maxFeePerGas,
+    });
     const receipt = await tx.wait();
 
     // ── Guardar gameId como recompensado ──────
