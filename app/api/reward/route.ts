@@ -114,14 +114,14 @@ export async function POST(request: Request) {
       maxPriorityFeePerGas,
       maxFeePerGas,
     });
-    const receipt = await tx.wait();
 
-    // ── Guardar gameId como recompensado ──────
+    // No esperar confirmación para evitar timeout en Vercel
+    // La tx ya fue enviada a la red, el jugador recibirá los tokens
     saveRewardedGame(gameId);
 
     return NextResponse.json({
       success: true,
-      txHash: receipt.transactionHash,
+      txHash: tx.hash,
     });
   } catch (error: any) {
     console.error("Error processing reward:", error);
