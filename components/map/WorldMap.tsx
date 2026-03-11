@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ethers } from "ethers";
 import { useWallet } from "@/hooks/useWallet";
 import { useFGToken } from "@/hooks/useFGToken";
+import { getFGTokenWithSigner } from "@/lib/contracts";
+import { useToast } from "@/components/layout/ToastProvider";
 import WorldCard from "./WorldCard";
 import type { PlayerProgress } from "@/types";
 
@@ -34,8 +37,9 @@ const WORLDS = [
 ];
 
 export default function WorldMap() {
-  const { address } = useWallet();
-  const { balance } = useFGToken(address);
+  const { address, signer } = useWallet();
+  const { balance, refresh } = useFGToken(address);
+  const { addToast } = useToast();
   const [progress, setProgress] = useState<PlayerProgress>({
     completedActivities: {},
     totalFGTEarned: 0,
@@ -43,6 +47,7 @@ export default function WorldMap() {
   const [unlockedWorlds, setUnlockedWorlds] = useState<Set<number>>(
     new Set([1])
   );
+  const [unlocking, setUnlocking] = useState(false);
 
   // Cargar progreso desde localStorage
   useEffect(() => {
@@ -64,15 +69,37 @@ export default function WorldMap() {
     ).length;
   };
 
-  const handleUnlock = (worldId: number) => {
-    const newUnlocked = new Set(unlockedWorlds);
-    newUnlocked.add(worldId);
-    setUnlockedWorlds(newUnlocked);
-    if (address) {
-      localStorage.setItem(
-        `unlocked_${address}`,
-        JSON.stringify([...newUnlocked])
-      );
+  const handleUnlock = async (worldId: number, requiredFGT: number) => {
+    if (!signer || unlocking) return;
+
+    setUnlocking(true);
+    try {
+      const fgToken = getFGTokenWithSigner(signer);
+      const amountWei = ethers.utils.parseEther(requiredFGT.toString());
+      const tx = await fgToken.burn(amountWei);
+      addToast(`Quemando ${requiredFGT} FGT...`, "info");
+      await tx.wait();
+
+      const newUnlocked = new Set(unlockedWorlds);
+      newUnlocked.add(worldId);
+      setUnlockedWorlds(newUnlocked);
+      if (address) {
+        localStorage.setItem(
+          `unlocked_${address}`,
+          JSON.stringify([...newUnlocked])
+        );
+      }
+
+      refresh();
+      addToast(`Mundo ${worldId} desbloqueado!`, "success");
+    } catch (error: any) {
+      if (error.code === 4001 || error.code === "ACTION_REJECTED") {
+        addToast("Transacción cancelada", "error");
+      } else {
+        addToast("Error al desbloquear el mundo", "error");
+      }
+    } finally {
+      setUnlocking(false);
     }
   };
 
@@ -102,7 +129,7 @@ export default function WorldMap() {
               key={world.id}
               onClick={() => {
                 if (!isUnlocked && canUnlock) {
-                  handleUnlock(world.id);
+                  handleUnlock(world.id, world.requiredFGT);
                 }
               }}
             >
