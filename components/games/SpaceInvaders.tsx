@@ -25,6 +25,8 @@ const ENEMY_LABELS: Record<number, string[]> = {
       "border", "font", "text", "bg", "hover"],
   3: ["{}", "()", "=>", ";", "fn", "let", "const", "if", "for", "while",
       "map", "push", "pop", "new", "this"],
+  4: ["contract", "mapping", "address", "uint256", "msg.sender", "require", "event",
+      "emit", "payable", "view", "pure", "modifier", "storage", "memory", "abi"],
 };
 
 interface Entity {

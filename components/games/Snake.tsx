@@ -18,6 +18,7 @@ const FOOD_ITEMS: Record<number, string[]> = {
   1: ["<h1>", "<p>", "<a>", "<img>", "<div>", "<ul>", "<form>", "<input>", "<span>", "<table>"],
   2: ["color", "margin", "padding", "flex", "grid", ".class", "#id", "border", "display", "font"],
   3: ["let", "const", "function", "=>", "if", "for", "push()", "map()", "return", "async"],
+  4: ["contract", "mapping", "address", "msg.sender", "require", "event", "emit", "payable", "view", "uint256"],
 };
 
 interface Point {

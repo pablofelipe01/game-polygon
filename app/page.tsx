@@ -51,7 +51,7 @@ export default function LandingPage() {
         </p>
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           <div className="bg-gaming-card/50 border border-gaming-purple/20 rounded-xl p-6">
             <span className="text-3xl block mb-3">🌐</span>
             <h3 className="font-pixel text-xs text-gaming-purple mb-2">
@@ -75,6 +75,15 @@ export default function LandingPage() {
             </h3>
             <p className="text-sm text-white/60">
               Programa interactividad real
+            </p>
+          </div>
+          <div className="bg-gaming-card/50 border border-gaming-purple/20 rounded-xl p-6">
+            <span className="text-3xl block mb-3">🔗</span>
+            <h3 className="font-pixel text-xs text-gaming-purple mb-2">
+              Solidity
+            </h3>
+            <p className="text-sm text-white/60">
+              Smart contracts en blockchain
             </p>
           </div>
         </div>

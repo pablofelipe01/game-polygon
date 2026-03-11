@@ -19,6 +19,7 @@ const WORLD_NAMES: Record<number, { name: string; icon: string }> = {
   1: { name: "HTML", icon: "🌐" },
   2: { name: "CSS", icon: "🎨" },
   3: { name: "JavaScript", icon: "⚡" },
+  4: { name: "Solidity", icon: "🔗" },
 };
 
 function getWorldActivities(worldId: number): Activity[] {
@@ -81,7 +82,7 @@ export default function WorldPage() {
 
   // Cargar actividades del mundo
   useEffect(() => {
-    if (!worldId || worldId < 1 || worldId > 3) {
+    if (!worldId || worldId < 1 || worldId > 4) {
       router.push("/map");
       return;
     }

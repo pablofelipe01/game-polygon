@@ -272,11 +272,106 @@ const jsQuestions: Question[] = [
   },
 ];
 
+// ── MUNDO 4: SOLIDITY ───────────────────────
+const solidityQuestions: Question[] = [
+  {
+    id: "sol-1",
+    world: 4,
+    question: "¿Con qué palabra clave se declara un contrato en Solidity?",
+    code: null,
+    options: [
+      "class MiContrato { }",
+      "contract MiContrato { }",
+      "module MiContrato { }",
+      "def MiContrato { }",
+    ],
+    correct: 1,
+    explanation: "En Solidity se usa 'contract' para declarar un smart contract.",
+    fgt: 15,
+  },
+  {
+    id: "sol-2",
+    world: 4,
+    question: "¿Cuál es el tipo de dato para direcciones de wallet?",
+    code: null,
+    options: [
+      "string",
+      "wallet",
+      "address",
+      "bytes32",
+    ],
+    correct: 2,
+    explanation: "address es el tipo nativo de Solidity para direcciones Ethereum (20 bytes).",
+    fgt: 15,
+  },
+  {
+    id: "sol-3",
+    world: 4,
+    question: "¿Qué modificador hace que una función no modifique el estado?",
+    code: "function getBalance(address user) public ??? returns (uint256) {\n  return balances[user];\n}",
+    options: [
+      "pure",
+      "view",
+      "constant",
+      "readonly",
+    ],
+    correct: 1,
+    explanation: "view indica que la función lee pero no modifica el estado del contrato.",
+    fgt: 15,
+  },
+  {
+    id: "sol-4",
+    world: 4,
+    question: "¿Qué keyword se usa para enviar ETH/POL desde un contrato?",
+    code: null,
+    options: [
+      "send()",
+      "transfer()",
+      "payable",
+      "msg.value",
+    ],
+    correct: 2,
+    explanation: "payable permite que una función reciba ETH. transfer() envía ETH a una dirección.",
+    fgt: 15,
+  },
+  {
+    id: "sol-5",
+    world: 4,
+    question: "¿Cómo se define un mapping de dirección a saldo?",
+    code: null,
+    options: [
+      "map(address => uint256) balances",
+      "mapping(address => uint256) balances",
+      "dict<address, uint256> balances",
+      "HashMap<address, uint256> balances",
+    ],
+    correct: 1,
+    explanation: "mapping es la estructura de datos clave-valor en Solidity.",
+    fgt: 15,
+  },
+  {
+    id: "sol-6",
+    world: 4,
+    question: "¿Qué variable global contiene la dirección que llama la función?",
+    code: "function withdraw() public {\n  require(??? == owner);\n}",
+    options: [
+      "this.caller",
+      "tx.sender",
+      "msg.sender",
+      "block.caller",
+    ],
+    correct: 2,
+    explanation: "msg.sender es la dirección que ejecuta la transacción actual.",
+    fgt: 15,
+  },
+];
+
 // ── Exportar todo el banco de preguntas ───────
 export const allQuestions: Question[] = [
   ...htmlQuestions,
   ...cssQuestions,
   ...jsQuestions,
+  ...solidityQuestions,
 ];
 
 // ── Helpers para obtener preguntas por mundo ──

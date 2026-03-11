@@ -39,6 +39,16 @@ const PAIRS_BY_WORLD: Record<number, MemoryPair[]> = {
     { term: "console.log", definition: "Imprimir" },
     { term: "return", definition: "Retornar valor" },
   ],
+  4: [
+    { term: "contract", definition: "Smart Contract" },
+    { term: "mapping", definition: "Clave-valor" },
+    { term: "address", definition: "Dirección wallet" },
+    { term: "msg.sender", definition: "Quien llama" },
+    { term: "require", definition: "Validación" },
+    { term: "event", definition: "Emitir log" },
+    { term: "modifier", definition: "Modificador" },
+    { term: "payable", definition: "Recibe ETH" },
+  ],
 };
 
 interface Card {

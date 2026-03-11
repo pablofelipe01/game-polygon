@@ -34,6 +34,14 @@ const WORLDS = [
     requiredFGT: 150,
     totalActivities: 10,
   },
+  {
+    id: 4,
+    name: "Solidity",
+    icon: "🔗",
+    description: "Programa smart contracts en la blockchain",
+    requiredFGT: 500,
+    totalActivities: 10,
+  },
 ];
 
 export default function WorldMap() {
