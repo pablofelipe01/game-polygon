@@ -5,8 +5,11 @@ import { join } from "path";
 import FGTokenABI from "@/contracts/abis/FGToken.json";
 import { createProvider } from "@/lib/provider";
 
-// Ruta al archivo anti-cheat
-const REWARDED_GAMES_PATH = join(process.cwd(), "lib", "rewardedGames.json");
+// En Vercel solo /tmp es escribible; en local usamos lib/
+const REWARDED_GAMES_PATH =
+  process.env.VERCEL
+    ? join("/tmp", "rewardedGames.json")
+    : join(process.cwd(), "lib", "rewardedGames.json");
 
 // Leer gameIds ya recompensados
 function getRewardedGames(): string[] {
@@ -20,9 +23,13 @@ function getRewardedGames(): string[] {
 
 // Guardar gameId recompensado
 function saveRewardedGame(gameId: string) {
-  const games = getRewardedGames();
-  games.push(gameId);
-  writeFileSync(REWARDED_GAMES_PATH, JSON.stringify(games, null, 2));
+  try {
+    const games = getRewardedGames();
+    games.push(gameId);
+    writeFileSync(REWARDED_GAMES_PATH, JSON.stringify(games, null, 2));
+  } catch {
+    // No fallar si no se puede escribir
+  }
 }
 
 export async function POST(request: Request) {
@@ -114,14 +121,14 @@ export async function POST(request: Request) {
       maxPriorityFeePerGas,
       maxFeePerGas,
     });
+    const receipt = await tx.wait();
 
-    // No esperar confirmación para evitar timeout en Vercel
-    // La tx ya fue enviada a la red, el jugador recibirá los tokens
+    // ── Guardar gameId como recompensado ──────
     saveRewardedGame(gameId);
 
     return NextResponse.json({
       success: true,
-      txHash: tx.hash,
+      txHash: receipt.transactionHash,
     });
   } catch (error: any) {
     console.error("Error processing reward:", error);
